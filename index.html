@@ -3,28 +3,47 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>App Điểm Danh</title>
+  <title>Kỷ Luật Cá Nhân</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header class="top-nav">
+    <span class="app-brand">DISCIPLINE</span>
     <div id="user-badge" class="user-badge">
       <span class="user-dot"></span>
       <span>NghjaBoNC</span>
     </div>
   </header>
 
-  <h1 id="hero-title" class="hero-title" title="Chạm để đổi câu khác"></h1>
+  <main class="app-container">
+    <section id="quote-card" class="quote-card" title="Chạm để đổi thông điệp">
+      <span class="quote-label">THÔNG ĐIỆP HÔM NAY</span>
+      <p id="hero-title" class="hero-title"></p>
+    </section>
 
-  <main class="main-card">
-    <button id="checkin-btn" class="checkin-btn" type="button">Điểm Danh</button>
+    <section class="main-card">
+      <p id="today-date" class="today-date"></p>
+      <button id="checkin-btn" class="checkin-btn" type="button">Điểm Danh</button>
+      <p id="checkin-status" class="checkin-status">Chưa ghi nhận hôm nay</p>
+    </section>
   </main>
 
-  <nav class="bottom-nav" aria-label="Điều hướng chính">
-    <div class="nav-slot"></div>
-    <div class="nav-slot"></div>
-    <div class="nav-slot"></div>
-  </nav>
+  <footer class="stats-bar" aria-label="Thống kê nhanh">
+    <div class="stat-item">
+      <span id="stat-streak" class="stat-val">0</span>
+      <span class="stat-lbl">Chuỗi ngày</span>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-item">
+      <span id="stat-total" class="stat-val">0</span>
+      <span class="stat-lbl">Tổng tích lũy</span>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-item">
+      <span id="stat-month" class="stat-val">0%</span>
+      <span class="stat-lbl">Tháng này</span>
+    </div>
+  </footer>
 
   <script src="quotes.js"></script>
   <script src="app.js"></script>
