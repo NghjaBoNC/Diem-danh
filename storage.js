@@ -30,13 +30,20 @@ const Store = (() => {
   const isCompleted = (r) => Boolean(r && (r.type === 'makeup' || (r.start && r.end)));
 
   const calcStats = (history) => {
-    const keys = Object.keys(history).filter((k) => isCompleted(history[k]));
+    const keys = Object.keys(history).filter((k) => isCompleted(history[k])).sort();
     const now = new Date();
-    const monthCount = keys.filter((k) => k.startsWith(toDateKey(now).slice(0, 7))).length;
     let streak = 0;
     const cur = new Date(now);
     if (!isCompleted(history[toDateKey(cur)])) cur.setDate(cur.getDate() - 1);
     while (isCompleted(history[toDateKey(cur)])) { streak++; cur.setDate(cur.getDate() - 1); }
+
+    let bestStreak = 0, run = 0, prevMs = null;
+    keys.forEach((k) => {
+      const ms = new Date(k + 'T00:00:00').getTime();
+      run = (prevMs !== null && Math.round((ms - prevMs) / 86400000) === 1) ? run + 1 : 1;
+      if (run > bestStreak) bestStreak = run;
+      prevMs = ms;
+    });
 
     let totalMins = 0;
     keys.forEach((k) => {
@@ -44,7 +51,7 @@ const Store = (() => {
       if (r.start && r.end) totalMins += Math.max(1, Math.round((new Date(r.end) - new Date(r.start)) / 60000));
     });
 
-    return { streak, total: keys.length, monthPct: Math.round((monthCount / now.getDate()) * 100), totalMins };
+    return { streak, bestStreak, total: keys.length, totalMins };
   };
 
   return { toDateKey, load, save, isCompleted, calcStats };

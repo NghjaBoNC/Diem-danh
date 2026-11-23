@@ -131,10 +131,10 @@
       st.textContent = rec.note ? `✓ ${rec.note}` : '✓ Đã chốt kỷ luật hôm nay!';
     }
 
-    const { streak, total, monthPct } = Store.calcStats(history);
+    const { streak, bestStreak, total } = Store.calcStats(history);
     $('stat-streak').textContent = streak;
     $('stat-total').textContent = total;
-    $('stat-month').textContent = `${monthPct}%`;
+    $('stat-best').textContent = bestStreak;
 
     const rk = getRank(streak);
     $('rank-name').textContent = `Hạng: ${rk.name}`;
