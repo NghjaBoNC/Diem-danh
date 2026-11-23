@@ -4,17 +4,17 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Kỷ Luật Cá Nhân</title>
-  <link rel="stylesheet" href="style.css?v=2" />
+  <link rel="stylesheet" href="style.css?v=3" />
 </head>
 <body>
   <header class="top-nav">
-    <div id="user-badge" class="user-badge">
+    <div class="user-badge">
       <span class="user-dot"></span>
       <span>NghjaBoNC</span>
     </div>
   </header>
 
-  <main class="app-container">
+  <main id="view-home" class="app-container">
     <section id="quote-card" class="quote-card" title="Chạm để đổi thông điệp">
       <span class="quote-label">THÔNG ĐIỆP HÔM NAY</span>
       <p id="hero-title" class="hero-title"></p>
@@ -22,27 +22,68 @@
 
     <section class="main-card">
       <p id="today-date" class="today-date"></p>
-      <button id="checkin-btn" class="checkin-btn" type="button">Điểm Danh</button>
-      <p id="checkin-status" class="checkin-status">Chưa ghi nhận hôm nay</p>
+      <button id="checkin-btn" class="checkin-btn" type="button">Bắt Đầu Học</button>
+      <div id="session-info" class="session-info hidden">
+        <div class="time-pill"><span>Bắt đầu</span><strong id="t-start">--:--</strong></div>
+        <div class="time-pill"><span>Kết thúc</span><strong id="t-end">--:--</strong></div>
+        <div class="time-pill"><span>Tổng học</span><strong id="t-total">--</strong></div>
+      </div>
+      <p id="checkin-status" class="checkin-status">Chưa bắt đầu phiên hôm nay</p>
     </section>
 
-    <section class="stats-grid" aria-label="Thống kê nhanh">
-      <div class="stat-box">
-        <span id="stat-streak" class="stat-val">0 ngày</span>
-        <span class="stat-lbl">Chuỗi ngày</span>
+    <section class="streak-arc-wrap" aria-label="Thống kê chuỗi">
+      <div class="arc-wing arc-left">
+        <strong id="stat-total" class="arc-val">0</strong>
+        <span class="arc-lbl">Tổng tích lũy</span>
       </div>
-      <div class="stat-box">
-        <span id="stat-total" class="stat-val">0</span>
-        <span class="stat-lbl">Tổng tích lũy</span>
+      <div class="flame-core">
+        <svg class="flame-svg" viewBox="0 0 64 64" aria-hidden="true">
+          <path d="M33 4c2 11-5 16-5 24 0 4 3 7 7 7 5 0 8-5 6-12 7 5 11 13 11 21 0 11-9 18-20 18S12 55 12 44c0-11 8-20 14-27 1 5 4 7 7 7-2-6 0-14 0-20z" fill="url(#flameGrad)"/>
+          <defs>
+            <linearGradient id="flameGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#fef08a"/>
+              <stop offset="55%" stop-color="#f97316"/>
+              <stop offset="100%" stop-color="#dc2626"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <strong id="stat-streak" class="flame-num">0</strong>
+        <span class="flame-lbl">Chuỗi</span>
       </div>
-      <div class="stat-box">
-        <span id="stat-month" class="stat-val">0%</span>
-        <span class="stat-lbl">Tháng này</span>
+      <div class="arc-wing arc-right">
+        <strong id="stat-month" class="arc-val">0%</strong>
+        <span class="arc-lbl">Tháng này</span>
       </div>
     </section>
   </main>
 
+  <section id="view-history" class="app-container hidden">
+    <div class="calendar-card">
+      <div class="cal-header">
+        <button id="cal-prev" class="cal-nav-btn" type="button">‹</button>
+        <h2 id="cal-title" class="cal-title">Tháng 11 / 2026</h2>
+        <button id="cal-next" class="cal-nav-btn" type="button">›</button>
+      </div>
+      <div class="cal-weekdays">
+        <span>T2</span><span>T3</span><span>T4</span><span>T5</span><span>T6</span><span>T7</span><span>CN</span>
+      </div>
+      <div id="cal-grid" class="cal-grid"></div>
+      <div class="cal-legend">
+        <span><i class="dot green"></i>Điểm danh</span>
+        <span><i class="dot yellow"></i>Học bù / Bận</span>
+        <span><i class="dot red"></i>Bỏ lỡ</span>
+      </div>
+      <p class="cal-hint">Chạm vào ngày màu đỏ để đánh dấu học bù</p>
+    </div>
+  </section>
+
+  <nav class="bottom-nav" aria-label="Điều hướng chính">
+    <button id="tab-home" class="nav-tab active" type="button">Hôm nay</button>
+    <button id="tab-history" class="nav-tab" type="button">Lịch sử</button>
+  </nav>
+
   <script src="quotes.js"></script>
-  <script src="app.js"></script>
+  <script src="storage.js?v=3"></script>
+  <script src="app.js?v=3"></script>
 </body>
 </html>
