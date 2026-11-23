@@ -4,10 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Kỷ Luật Cá Nhân</title>
-  <link rel="stylesheet" href="style.css?v=6" />
+  <link rel="stylesheet" href="style.css?v=7" />
 </head>
 <body>
   <header class="top-nav">
+    <span id="greeting-text" class="greeting-text">Kỷ luật mỗi ngày</span>
     <div class="user-badge">
       <span class="user-dot"></span>
       <span>NghjaBoNC</span>
@@ -16,11 +17,14 @@
 
   <main id="view-home" class="app-container">
     <section id="quote-card" class="quote-card" title="Chạm để đổi thông điệp">
-      <span class="quote-label">THÔNG ĐIỆP HÔM NAY</span>
+      <div class="quote-head">
+        <span class="quote-label">THÔNG ĐIỆP HÔM NAY</span>
+        <span class="quote-tap">Chạm đổi ↻</span>
+      </div>
       <p id="hero-title" class="hero-title"></p>
     </section>
 
-    <section class="main-card">
+    <section id="main-card" class="main-card">
       <p id="today-date" class="today-date"></p>
       <button id="checkin-btn" class="checkin-btn" type="button">Bắt Đầu Học</button>
       <div id="session-info" class="session-info hidden">
@@ -28,20 +32,20 @@
         <div class="time-pill"><span>Kết thúc</span><strong id="t-end">--:--</strong></div>
         <div class="time-pill"><span>Tổng học</span><strong id="t-total">--</strong></div>
       </div>
-      <p id="checkin-status" class="checkin-status">Chưa bắt đầu phiên hôm nay</p>
+      <div id="checkin-status" class="checkin-status">Chưa bắt đầu phiên hôm nay</div>
     </section>
 
     <section class="streak-arc-wrap" aria-label="Thống kê chuỗi">
-      <svg class="arc-bg-svg" viewBox="0 0 340 104" aria-hidden="true">
-        <path d="M 114 14 A 48 48 0 0 0 114 90" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="9" stroke-linecap="round"/>
-        <path d="M 114 14 A 48 48 0 0 0 114 90" fill="none" stroke="#fde047" stroke-width="3.5" stroke-linecap="round"/>
-        <path d="M 226 14 A 48 48 0 0 1 226 90" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="9" stroke-linecap="round"/>
-        <path d="M 226 14 A 48 48 0 0 1 226 90" fill="none" stroke="#34d399" stroke-width="3.5" stroke-linecap="round"/>
+      <svg class="arc-bg-svg" viewBox="0 0 340 100" aria-hidden="true">
+        <path d="M 116 14 A 46 46 0 0 0 116 86" fill="none" stroke="rgba(255,255,255,0.16)" stroke-width="8" stroke-linecap="round"/>
+        <path d="M 116 14 A 46 46 0 0 0 116 86" fill="none" stroke="#fde047" stroke-width="3.5" stroke-linecap="round"/>
+        <path d="M 224 14 A 46 46 0 0 1 224 86" fill="none" stroke="rgba(255,255,255,0.16)" stroke-width="8" stroke-linecap="round"/>
+        <path d="M 224 14 A 46 46 0 0 1 224 86" fill="none" stroke="#34d399" stroke-width="3.5" stroke-linecap="round"/>
       </svg>
 
       <div class="arc-side left">
         <strong id="stat-total" class="arc-val">0</strong>
-        <span class="arc-lbl">Tổng tích lũy</span>
+        <span class="arc-lbl"><i class="legend-dot gold"></i>Tổng tích lũy</span>
       </div>
 
       <div class="flame-core">
@@ -61,8 +65,13 @@
 
       <div class="arc-side right">
         <strong id="stat-month" class="arc-val">0%</strong>
-        <span class="arc-lbl">Tháng này</span>
+        <span class="arc-lbl"><i class="legend-dot mint"></i>Tháng này</span>
       </div>
+    </section>
+
+    <section class="recent-card" aria-label="Hoạt động gần đây">
+      <span class="recent-lbl">GẦN ĐÂY</span>
+      <span id="recent-text" class="recent-val">Chưa có dữ liệu trước đó</span>
     </section>
   </main>
 
@@ -99,6 +108,6 @@
 
   <script src="quotes.js"></script>
   <script src="storage.js?v=5"></script>
-  <script src="app.js?v=5"></script>
+  <script src="app.js?v=7"></script>
 </body>
 </html>

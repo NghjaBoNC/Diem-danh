@@ -12,13 +12,37 @@
     return m >= 60 ? `${Math.floor(m / 60)}h ${m % 60}p` : `${m} phút`;
   };
 
-  const setQuote = () => {
+  const getGreeting = (h) => h < 12 ? 'Chào buổi sáng' : h < 18 ? 'Chào buổi chiều' : 'Chào buổi tối';
+
+  const setQuote = (animate = false) => {
     if (typeof QUOTES === 'undefined' || !QUOTES.length) return;
     const last = Number(localStorage.getItem(QUOTE_KEY));
     let idx;
     do { idx = Math.floor(Math.random() * QUOTES.length); } while (QUOTES.length > 1 && idx === last);
     localStorage.setItem(QUOTE_KEY, String(idx));
-    $('hero-title').textContent = QUOTES[idx];
+    const el = $('hero-title');
+    if (animate) {
+      el.classList.add('fade');
+      setTimeout(() => { el.textContent = QUOTES[idx]; el.classList.remove('fade'); }, 150);
+    } else {
+      el.textContent = QUOTES[idx];
+    }
+  };
+
+  const renderRecent = (history, todayKey) => {
+    const prevKeys = Object.keys(history).filter((k) => k < todayKey && Store.isCompleted(history[k])).sort();
+    const lastKey = prevKeys[prevKeys.length - 1];
+    const el = $('recent-text');
+    if (!lastKey) { el.textContent = 'Bắt đầu chuỗi kỷ luật từ hôm nay'; return; }
+    const rec = history[lastKey];
+    const [, m, d] = lastKey.split('-');
+    if (rec.type === 'makeup') {
+      el.textContent = `${d}/${m} · Đã đánh dấu học bù`;
+    } else if (rec.start && rec.end) {
+      el.textContent = `${d}/${m} · ${fmtTime(rec.start)}–${fmtTime(rec.end)} (${fmtDur(new Date(rec.end) - new Date(rec.start))})`;
+    } else {
+      el.textContent = `${d}/${m} · Đã hoàn thành`;
+    }
   };
 
   const renderHome = () => {
@@ -26,11 +50,13 @@
     const today = Store.toDateKey(now);
     const { history } = Store.load();
     const rec = history[today];
-    const btn = $('checkin-btn'), info = $('session-info'), st = $('checkin-status');
+    const card = $('main-card'), btn = $('checkin-btn'), info = $('session-info'), st = $('checkin-status');
 
+    $('greeting-text').textContent = `${getGreeting(now.getHours())}, Nghĩa`;
     $('today-date').textContent = now.toLocaleDateString('vi-VN', { weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric' });
     btn.className = 'checkin-btn';
     st.className = 'checkin-status';
+    card.classList.remove('is-done');
 
     if (!rec) {
       btn.disabled = false;
@@ -49,7 +75,7 @@
         btn.disabled = true;
         btn.classList.add('waiting');
         btn.textContent = `Chờ ${m}:${s} để kết thúc`;
-        st.textContent = `Bắt đầu lúc ${fmtTime(rec.start)} (chạm đúp đây để hủy phiên)`;
+        st.textContent = `Bắt đầu ${fmtTime(rec.start)} (chạm đúp để hủy)`;
       } else {
         btn.disabled = false;
         btn.classList.add('ready-end');
@@ -57,21 +83,23 @@
         st.textContent = 'Đã đủ 10 phút — bấm để chốt phiên!';
       }
     } else {
+      card.classList.add('is-done');
       btn.disabled = true;
       btn.classList.add('checked');
-      btn.textContent = 'Đã Hoàn Thành ✓';
+      btn.textContent = 'Đã Hoàn Thành';
       info.classList.remove('hidden');
       $('t-start').textContent = rec.start ? fmtTime(rec.start) : 'Học bù';
       $('t-end').textContent = rec.end ? fmtTime(rec.end) : '--:--';
       $('t-total').textContent = (rec.start && rec.end) ? fmtDur(new Date(rec.end) - new Date(rec.start)) : 'Bù';
       st.classList.add('done');
-      st.textContent = 'Đã chốt kỷ luật hôm nay! (chạm đúp để làm lại)';
+      st.innerHTML = '✓ Đã chốt kỷ luật hôm nay!';
     }
 
     const { streak, total, monthPct } = Store.calcStats(history);
     $('stat-streak').textContent = streak;
     $('stat-total').textContent = total;
     $('stat-month').textContent = `${monthPct}%`;
+    renderRecent(history, today);
   };
 
   const renderCal = () => {
@@ -136,9 +164,9 @@
   });
   $('cal-prev').addEventListener('click', () => { if (--calMonth < 0) { calMonth = 11; calYear--; } renderCal(); });
   $('cal-next').addEventListener('click', () => { if (++calMonth > 11) { calMonth = 0; calYear++; } renderCal(); });
-  $('quote-card').addEventListener('click', setQuote);
+  $('quote-card').addEventListener('click', () => setQuote(true));
 
-  setQuote();
+  setQuote(false);
   renderHome();
   setInterval(renderHome, 1000);
 })();
