@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>App Điểm Danh</title>
+  <style>
+    :root {
+      --bg-top: #ffffff;
+      --bg-mid: #e9d8fd;
+      --bg-bottom: #6b21a8;
+      --card-bg: rgba(255, 255, 255, 0.88);
+      --card-border: rgba(255, 255, 255, 0.95);
+      --primary: #7c3aed;
+      --success: #10b981;
+      --text-main: #1e1b4b;
+      --radius-card: 28px;
+      --radius-btn: 18px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    body {
+      min-height: 100dvh;
+      font-family: system-ui, -apple-system, sans-serif;
+      background: linear-gradient(180deg, var(--bg-top) 0%, var(--bg-mid) 48%, var(--bg-bottom) 100%);
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 20px;
+      gap: 28px;
+    }
+    .hero-title {
+      min-height: 44px;
+      min-width: 240px;
+      max-width: 90vw;
+      font-size: 1.85rem;
+      font-weight: 800;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1.5px dashed rgba(124, 58, 237, 0.28);
+      border-radius: 12px;
+      padding: 6px 16px;
+    }
+    .hero-title:not(:empty) { border: none; padding: 0; }
+    .main-card {
+      width: 100%;
+      max-width: 380px;
+      min-height: 320px;
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-card);
+      box-shadow: 0 20px 45px -10px rgba(76, 29, 149, 0.28);
+      padding: 32px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+    }
+    .checkin-btn {
+      width: 100%;
+      max-width: 240px;
+      padding: 18px 28px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #ffffff;
+      background: linear-gradient(135deg, #8b5cf6 0%, var(--primary) 100%);
+      border: none;
+      border-radius: var(--radius-btn);
+      box-shadow: 0 10px 24px -6px rgba(124, 58, 237, 0.55);
+      cursor: pointer;
+      transition: transform 0.15s ease, background 0.25s ease;
+    }
+    .checkin-btn:active { transform: scale(0.95); }
+    .checkin-btn.checked {
+      background: linear-gradient(135deg, #34d399 0%, var(--success) 100%);
+      box-shadow: 0 10px 24px -6px rgba(16, 185, 129, 0.45);
+    }
+  </style>
+</head>
+<body>
+  <h1 id="hero-title" class="hero-title"></h1>
+  <main class="main-card">
+    <button id="checkin-btn" class="checkin-btn" type="button">Điểm Danh</button>
+  </main>
+  <script>
+    (() => {
+      const STORAGE_KEY = 'daily_checkin_v1';
+      const checkinBtn = document.getElementById('checkin-btn');
+      const getTodayKey = () => {
+        const now = new Date();
+        return new Date(now - now.getTimezoneOffset() * 60000).toISOString().split('T')[0];
+      };
+      const loadState = () => {
+        try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || { history: {} }; }
+        catch { return { history: {} }; }
+      };
+      const saveState = (state) => localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      const render = () => {
+        const isChecked = Boolean(loadState().history[getTodayKey()]);
+        checkinBtn.classList.toggle('checked', isChecked);
+        checkinBtn.textContent = isChecked ? 'Đã Điểm Danh ✓' : 'Điểm Danh';
+      };
+      checkinBtn.addEventListener('click', () => {
+        const state = loadState();
+        const today = getTodayKey();
+        state.history[today] ? delete state.history[today] : (state.history[today] = new Date().toISOString());
+        saveState(state);
+        render();
+      });
+      render();
+    })();
+  </script>
+</body>
+</html>
+
