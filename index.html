@@ -4,18 +4,26 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Kỷ Luật Cá Nhân</title>
-  <link rel="stylesheet" href="style.css?v=7" />
+  <link rel="stylesheet" href="style.css?v=8" />
 </head>
 <body>
   <header class="top-nav">
-    <span id="greeting-text" class="greeting-text">Kỷ luật mỗi ngày</span>
-    <div class="user-badge">
+    <span id="greeting-text" class="greeting-text">Khuya rồi, Nghĩa</span>
+    <button id="user-badge" class="user-badge" type="button" title="Sao lưu & Thêm câu nói">
       <span class="user-dot"></span>
       <span>NghjaBoNC</span>
-    </div>
+    </button>
   </header>
 
   <main id="view-home" class="app-container">
+    <section class="top-strip">
+      <div id="week-strip" class="week-strip" aria-label="Nhịp độ tuần này"></div>
+      <div class="target-row">
+        <button id="target-check" class="target-check" type="button" aria-label="Hoàn thành mục tiêu"></button>
+        <input id="target-input" class="target-input" type="text" maxlength="60" placeholder="Mục tiêu hôm nay (chạm để nhập)..." />
+      </div>
+    </section>
+
     <section id="quote-card" class="quote-card" title="Chạm để đổi thông điệp">
       <div class="quote-head">
         <span class="quote-label">THÔNG ĐIỆP HÔM NAY</span>
@@ -36,11 +44,11 @@
     </section>
 
     <section class="streak-arc-wrap" aria-label="Thống kê chuỗi">
-      <svg class="arc-bg-svg" viewBox="0 0 340 100" aria-hidden="true">
-        <path d="M 116 14 A 46 46 0 0 0 116 86" fill="none" stroke="rgba(255,255,255,0.16)" stroke-width="8" stroke-linecap="round"/>
-        <path d="M 116 14 A 46 46 0 0 0 116 86" fill="none" stroke="#fde047" stroke-width="3.5" stroke-linecap="round"/>
-        <path d="M 224 14 A 46 46 0 0 1 224 86" fill="none" stroke="rgba(255,255,255,0.16)" stroke-width="8" stroke-linecap="round"/>
-        <path d="M 224 14 A 46 46 0 0 1 224 86" fill="none" stroke="#34d399" stroke-width="3.5" stroke-linecap="round"/>
+      <svg class="arc-bg-svg" viewBox="0 0 340 96" aria-hidden="true">
+        <path d="M 118 12 A 44 44 0 0 0 118 84" fill="none" stroke="rgba(255,255,255,0.16)" stroke-width="8" stroke-linecap="round"/>
+        <path d="M 118 12 A 44 44 0 0 0 118 84" fill="none" stroke="#fde047" stroke-width="3.5" stroke-linecap="round"/>
+        <path d="M 222 12 A 44 44 0 0 1 222 84" fill="none" stroke="rgba(255,255,255,0.16)" stroke-width="8" stroke-linecap="round"/>
+        <path d="M 222 12 A 44 44 0 0 1 222 84" fill="none" stroke="#34d399" stroke-width="3.5" stroke-linecap="round"/>
       </svg>
 
       <div class="arc-side left">
@@ -69,9 +77,16 @@
       </div>
     </section>
 
-    <section class="recent-card" aria-label="Hoạt động gần đây">
-      <span class="recent-lbl">GẦN ĐÂY</span>
-      <span id="recent-text" class="recent-val">Chưa có dữ liệu trước đó</span>
+    <section class="rank-card">
+      <div class="rank-head">
+        <span id="rank-name" class="rank-name">Hạng: Tập Sự</span>
+        <span id="rank-next" class="rank-next">0 / 7 ngày</span>
+      </div>
+      <div class="rank-bar"><div id="rank-fill" class="rank-fill"></div></div>
+      <div class="recent-line">
+        <span class="recent-lbl">GẦN ĐÂY</span>
+        <span id="recent-text" class="recent-val">Chưa có dữ liệu trước đó</span>
+      </div>
     </section>
   </main>
 
@@ -86,14 +101,45 @@
         <span>T2</span><span>T3</span><span>T4</span><span>T5</span><span>T6</span><span>T7</span><span>CN</span>
       </div>
       <div id="cal-grid" class="cal-grid"></div>
-      <div class="cal-legend">
-        <span><i class="dot green"></i>Điểm danh</span>
-        <span><i class="dot yellow"></i>Học bù / Bận</span>
-        <span><i class="dot red"></i>Bỏ lỡ</span>
+      <div id="day-detail" class="day-detail">Chạm vào một ngày trên lịch để xem chi tiết</div>
+      <div class="cal-footer-bar">
+        <span>Tổng giờ cày: <strong id="total-hours">0 phút</strong></span>
+        <span class="cal-legend-mini"><i class="dot green"></i>Xong <i class="dot yellow"></i>Bù <i class="dot red"></i>Lỡ</span>
       </div>
-      <p class="cal-hint">Chạm vào ngày màu đỏ để đánh dấu học bù</p>
     </div>
   </section>
+
+  <!-- Modal Nhật ký buổi học -->
+  <div id="note-modal" class="modal hidden">
+    <div class="modal-box">
+      <h3>Chốt phiên học hôm nay</h3>
+      <p class="modal-sub">Ghi nhanh nội dung vừa hoàn thành (không bắt buộc):</p>
+      <input id="session-note-input" class="modal-input" type="text" maxlength="80" placeholder="VD: Xong Day 7 Linux, làm 5 bài C++..." />
+      <div class="modal-actions">
+        <button id="note-skip" class="btn-sec" type="button">Bỏ qua</button>
+        <button id="note-save" class="btn-pri" type="button">Lưu & Hoàn Thành</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Sao lưu & Thêm Quote -->
+  <div id="profile-modal" class="modal hidden">
+    <div class="modal-box">
+      <h3>NghjaBoNC · Tiện ích</h3>
+      <p class="modal-sub">Thêm câu châm ngôn mới của riêng mày:</p>
+      <div class="inline-add">
+        <input id="new-quote-input" class="modal-input" type="text" maxlength="110" placeholder="Nhập câu động lực mới..." />
+        <button id="add-quote-btn" class="btn-pri" type="button">Thêm</button>
+      </div>
+      <p class="modal-sub" style="margin-top:12px;">Sao lưu / Khôi phục dữ liệu điểm danh:</p>
+      <textarea id="backup-box" class="modal-textarea" rows="3" placeholder="Bấm Xuất mã để lấy dữ liệu, hoặc dán mã cũ vào đây để Khôi phục..."></textarea>
+      <div class="modal-actions">
+        <button id="export-btn" class="btn-sec" type="button">Xuất & Copy</button>
+        <button id="import-btn" class="btn-pri" type="button">Khôi phục</button>
+        <button id="close-profile" class="btn-sec" type="button">Đóng</button>
+      </div>
+    </div>
+  </div>
 
   <nav class="bottom-nav" aria-label="Điều hướng chính">
     <button id="tab-home" class="nav-tab active" type="button">
@@ -107,7 +153,7 @@
   </nav>
 
   <script src="quotes.js"></script>
-  <script src="storage.js?v=5"></script>
-  <script src="app.js?v=7"></script>
+  <script src="storage.js?v=8"></script>
+  <script src="app.js?v=8"></script>
 </body>
 </html>
