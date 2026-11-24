@@ -22,6 +22,12 @@
     return { name: 'Bất Bại', next: 60 };
   };
 
+  const getSuggestedLesson = (history, todayKey) => {
+    if (typeof ROADMAP_30 === 'undefined') return '';
+    const doneBeforeToday = Object.keys(history).filter((k) => k < todayKey && Store.isCompleted(history[k])).length;
+    return ROADMAP_30[doneBeforeToday] || ROADMAP_30[ROADMAP_30.length - 1];
+  };
+
   const getAllQuotes = () => [...(typeof QUOTES !== 'undefined' ? QUOTES : []), ...Store.load().customQuotes];
 
   const setQuote = (animate = false) => {
@@ -86,7 +92,8 @@
     $('greeting-text').textContent = `${getGreeting(now.getHours())}, Nghĩa`;
     $('today-date').textContent = now.toLocaleDateString('vi-VN', { weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric' });
 
-    const tObj = targets[today] || { text: '', done: false };
+    const suggested = getSuggestedLesson(history, today);
+    const tObj = targets[today] || { text: suggested, done: Store.isCompleted(rec) };
     if (document.activeElement !== $('target-input')) $('target-input').value = tObj.text;
     $('target-input').classList.toggle('checked', Boolean(tObj.done));
     $('target-check').classList.toggle('checked', Boolean(tObj.done));
@@ -188,8 +195,10 @@
     const s = Store.load();
     const today = Store.toDateKey(new Date());
     if (s.history[today] && s.history[today].start && !s.history[today].end) {
+      const fallbackNote = $('target-input').value.trim();
       s.history[today].end = new Date().toISOString();
-      s.history[today].note = noteText.trim();
+      s.history[today].note = noteText.trim() || fallbackNote;
+      s.targets[today] = { text: fallbackNote, done: true };
       Store.save(s);
     }
     $('note-modal').classList.add('hidden');
@@ -206,6 +215,7 @@
       Store.save(s);
       renderHome();
     } else if (rec.start && !rec.end && Date.now() - new Date(rec.start).getTime() >= MIN_WAIT_MS) {
+      $('session-note-input').value = $('target-input').value.trim();
       $('note-modal').classList.remove('hidden');
     }
   });
